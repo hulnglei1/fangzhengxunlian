@@ -161,10 +161,13 @@
         </video>
         
         <!-- 音频预览 -->
-        <audio v-else-if="isPreviewableAudio" controls width="100%">
-          <source :src="previewingMaterial.url" :type="previewingMaterial.fileType">
-          您的浏览器不支持音频预览
-        </audio>
+        <div v-else-if="isPreviewableAudio">
+          <button v-if="!showAudioPlayer" @click="showAudioPlayer = true">播放音频</button>
+          <audio v-else controls width="100%">
+            <source :src="previewingMaterial.url" :type="previewingMaterial.fileType">
+            您的浏览器不支持音频预览
+          </audio>
+        </div>
         
         <!-- 不支持预览的文件类型 -->
         <div v-else class="no-preview">
@@ -244,7 +247,8 @@ export default {
       // 删除确认
       showDeleteConfirm: false,
       materialToDelete: null,
-      deleteMode: 'single' // 'single' or 'multiple'
+      deleteMode: 'single', // 'single' or 'multiple'
+      showAudioPlayer: false,
     };
   },
   computed: {
@@ -581,7 +585,12 @@ export default {
       // 刷新筛选
       this.filterMaterials();
     }
-  }
+  },
+  watch: {
+    showPreviewModal(val) {
+      if (!val) this.showAudioPlayer = false;
+    },
+  },
 }
 </script>
 
